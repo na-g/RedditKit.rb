@@ -8,10 +8,14 @@ describe RedditKit::Client, :vcr do
   end
 
   it "can configure options" do
-    client = RedditKit::Client.new
+    client = RedditKit::Client.new nil,nil,"TestAgentBot","86"
     client.api_endpoint = "http://github.com/"
 
     expect(client.api_endpoint).to eq "http://github.com/"
+    expect(client.user_agent).to eq "TestAgentBot 86"
+
+    client.user_agent = "OtherTestAgentBot 99"
+    expect(client.user_agent).to eq "OtherTestAgentBot 99"
   end
 
   it "should have a modhash and cookie after signing in" do

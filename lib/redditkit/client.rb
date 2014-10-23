@@ -51,9 +51,13 @@ module RedditKit
     attr_accessor :user_agent
     attr_accessor :middleware
 
-    def initialize(username = nil, password = nil)
+    def initialize(username = nil, password = nil, agent_name = nil, agent_version = nil)
       @username = username
       @password = password
+
+      agent_name||="RedditKit.rb"
+      agent_version||=RedditKit::Version.to_s
+      @user_agent="#{agent_name} #{agent_version}"
 
       @cookie = nil
       @modhash = nil
@@ -67,10 +71,6 @@ module RedditKit
 
     def authentication_endpoint
       @authentication_endpoint ||= 'https://ssl.reddit.com/'
-    end
-
-    def user_agent
-      @user_agent ||= "RedditKit.rb #{RedditKit::Version.to_s}"
     end
 
     def middleware
