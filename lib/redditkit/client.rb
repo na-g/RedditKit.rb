@@ -45,20 +45,21 @@ module RedditKit
     attr_reader :current_user
     attr_reader :cookie
     attr_reader :modhash
-
+    
     attr_accessor :api_endpoint
-    attr_accessor :authentication_endpoint
-    attr_accessor :user_agent
+    attr_accessor :authentication_endpoint    
     attr_accessor :middleware
-
+    attr_accessor :user_agent
+    attr_accessor :user_agent_name
+    attr_accessor :user_agent_version
+    
     def initialize(username = nil, password = nil, agent_name = nil, agent_version = nil)
       @username = username
       @password = password
 
-      agent_name||="RedditKit.rb"
-      agent_version||=RedditKit::Version.to_s
-      @user_agent="#{agent_name} #{agent_version}"
-
+      @user_agent_name = agent_name
+      @user_agent_version = agent_version
+      
       @cookie = nil
       @modhash = nil
 
@@ -67,6 +68,23 @@ module RedditKit
 
     def api_endpoint
       @api_endpoint ||= 'http://www.reddit.com/'
+    end
+
+    def user_agent_name
+      @user_agent_name||="RedditKit.rb"
+    end
+
+    def user_agent_version
+      @user_agent_version||=RedditKit::Version.to_s
+    end
+
+    def user_agent
+      return @user_agent if @user_agent
+      if username
+        "#{user_agent_name}/#{user_agent_version} (+" << URI.join(api_endpoint,'/user/',username).to_s << ")"
+      else
+        "#{user_agent_name}/#{user_agent_version}"
+      end
     end
 
     def authentication_endpoint
